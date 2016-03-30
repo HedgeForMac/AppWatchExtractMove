@@ -94,6 +94,12 @@ while read -d "" path; do
 
   # Create symlink to latest
   if [ ! -z "$symlink_path" ]; then
+
+    # Remove old symlink first
+    if [ -f "$symlink_path" ]; then
+      rm "$symlink_path"
+    fi
+
     ln -s "$output_app_path" "$symlink_path"
     sym_success=$?
 
