@@ -14,4 +14,4 @@ filename="$2"
 output_dir="$3"
 
 # Loop through zips
-find "$zips_dir" -name "$filename" -print0 | ./extractupdate.sh "$filename" "$output_dir" false
+find "$zips_dir" -name "$filename" -print0 | ./extractupdate.sh "$filename" "$output_dir"
