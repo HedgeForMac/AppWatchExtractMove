@@ -27,7 +27,7 @@ while read -d "" path; do
 
     fi
 
-  elif [ -d "$path"  ]; then
+  elif [ -d "$path" ]; then
 
     # Check if the folder contains the file we want
     if [ -f "$path/$filename" ]; then
@@ -70,6 +70,14 @@ while read -d "" path; do
 
   # Move to output folder with updated name
   output_app_path="$output_dir/${app_name}_${build_version}b${build_number}.app"
+
+  now=$(date +"%d-%m-%Y %H:%M:%S")
+
+  if [ -d "$output_app_path" ]; then
+    echo "$now: $output_app_path already exists"
+    continue
+  fi
+
   mv "$app_path" "$output_app_path"
   mv_success=$?
 
@@ -79,7 +87,15 @@ while read -d "" path; do
     continue
   fi
 
-  now=$(date +"%d-%m-%Y %H:%M:%S")
   echo "$now: $output_app_path"
+
+  # Create symlink to latest
+  symlink_path="$output_dir/${app_name}-latest.app"
+  ln -s "$output_app_path" "$symlink_path"
+  sym_success=$?
+
+  if [ $sym_success -ne 0 ]; then
+    echo "ERROR: Failed to create symlink to the last build."
+  fi
 
 done
