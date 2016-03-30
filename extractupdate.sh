@@ -14,6 +14,9 @@ if [ ! -d "$output_dir" ]; then
   exit 2
 fi
 
+latest_build=0
+latest_path=
+
 while read -d "" path; do
 
   # Check if the file still exists at the path
@@ -72,6 +75,12 @@ while read -d "" path; do
   # Move to output folder with updated name
   output_app_path="$output_dir/${app_name}_${build_version}b${build_number}.app"
 
+  # Save path to be able to update symlink to latest
+  if (( $build_number >= $latest_build )); then
+    latest_build=$build_number
+    latest_path="$output_app_path"
+  fi
+
   now=$(date +"%d-%m-%Y %H:%M:%S")
 
   if [ -d "$output_app_path" ]; then
@@ -93,14 +102,14 @@ while read -d "" path; do
   echo "$now: $output_app_path"
 
   # Create symlink to latest
-  if [ ! -z "$symlink_path" ]; then
+  if [ ! -z "$symlink_path" ] && [ ! -z "$latest_path" ]; then
 
-    # Remove old symlink first
-    if [ -f "$symlink_path" ]; then
+    # Remove old symlink
+    if [ -d "$symlink_path" ]; then
       rm "$symlink_path"
     fi
 
-    ln -s "$output_app_path" "$symlink_path"
+    ln -s "$latest_path" "$symlink_path"
     sym_success=$?
 
     if [ $sym_success -ne 0 ]; then
