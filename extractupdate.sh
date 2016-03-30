@@ -76,6 +76,8 @@ while read -d "" path; do
 
   if [ -d "$output_app_path" ]; then
     echo "$now: $output_app_path already exists"
+    # Remove temporarily extracted app
+    rm -r "$app_path"
     continue
   fi
 
