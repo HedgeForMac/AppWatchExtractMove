@@ -12,6 +12,7 @@ fi
 zips_dir="$1"
 filename="$2"
 output_dir="$3"
+symlink_path="$4"
 
 # Loop through zips
-find "$zips_dir" -name "$filename" -print0 | ./extractupdate.sh "$filename" "$output_dir"
+find "$zips_dir" -name "$filename" -print0 | ./extractupdate.sh "$filename" "$output_dir" "$symlink_path"
