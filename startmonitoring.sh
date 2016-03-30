@@ -9,4 +9,4 @@ if [ ! -d "$1" ] || [ ! -d "$3" ]; then
   exit 2
 fi
 
-fswatch -r -Ie ".DS_Store$" -0 "$1" | ./extractupdate.sh "$2" "$3"
+fswatch -r -Ie ".DS_Store$" -0 "$1" | ./extractupdate.sh "$2" "$3" true

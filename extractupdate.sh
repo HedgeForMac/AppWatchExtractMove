@@ -1,12 +1,13 @@
 #!/bin/sh
-if [ "$#" -le 1 ]; then
-  "ERROR: Missing arguments. Filename to watch for and output path required.\n\nExample:\n./extractupdate.sh Hedge.app.zip ~/Desktop/output"
+if [ "$#" -le 2 ]; then
+  echo "ERROR: Missing arguments. Filename to watch for, output path and whether to create a symlink to latest required.\n\nExample:\n./extractupdate.sh Hedge.app.zip ~/Desktop/output true"
   exit 1
 fi
 
 filename="$1"
 app_name=${filename%%.*}
 output_dir="$2"
+create_symlink="$3"
 
 if [ ! -d "$output_dir" ]; then
   echo "ERROR: Destination folder doesn't exist. Create it first."
@@ -90,12 +91,14 @@ while read -d "" path; do
   echo "$now: $output_app_path"
 
   # Create symlink to latest
-  symlink_path="$output_dir/${app_name}-latest.app"
-  ln -s "$output_app_path" "$symlink_path"
-  sym_success=$?
+  if [ "$create_symlink" == "true" ]; then
+    symlink_path="$output_dir/${app_name}-latest.app"
+    ln -s "$output_app_path" "$symlink_path"
+    sym_success=$?
 
-  if [ $sym_success -ne 0 ]; then
-    echo "ERROR: Failed to create symlink to the last build."
+    if [ $sym_success -ne 0 ]; then
+      echo "ERROR: Failed to create symlink to the last build."
+    fi
   fi
 
 done
